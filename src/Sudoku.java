@@ -295,7 +295,7 @@ public class Sudoku {
             } catch(MyException e){
                 System.out.println("stack overflow");
             } finally {
-
+                //new code
             }
         } while(! result);
     }
