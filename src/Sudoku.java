@@ -157,20 +157,23 @@ public class Sudoku {
 
     }
 
-    Boolean SearchSolve() throws MyException {
+    Boolean SearchLonePerson() throws MyException {
         int row, col;
         Boolean result = false;
 
         for (row = 0; row < 9; row++)
             for (col = 0; col < 9; col++) {
-                if (Get(row, col).GetNumberVariant() == 1) {
-                    System.out.println("????????: " + (row + 1) + ", " + (col + 1));
-                    Cell cell = Get(row, col);
+                Cell cell = Get(row, col);
+                if (cell.GetNumberVariant() == 1) {
+
                     for (int i = 0; i < 9; i++) {
                         if (cell.variant[i] != 0) {
                             result = true;
-                            ExcludeVariant(row, col, cell.variant[i]);
-                            cell.SetDigit(cell.variant[i]);
+                            int digit = i + 1;
+                            System.out.println("lone person: " + (row + 1) + ", " + (col + 1) + ", value: " + digit);
+                            ExcludeVariant(row, col, digit);
+                            cell.SetDigit(digit);
+                            break;
                         }
                     }
 
@@ -183,7 +186,7 @@ public class Sudoku {
         Boolean searchSolve;
         Boolean result = Boolean.FALSE;
         do {
-            searchSolve = SearchSolve();
+            searchSolve = SearchLonePerson();
             if (searchSolve) {
                 result = Boolean.TRUE;
             }
@@ -192,65 +195,66 @@ public class Sudoku {
     }
 
     Boolean SearchVariant(int row, int col, int d) {
-        Boolean result = false;
+        Boolean result = Boolean.FALSE;
         int i;
 
-        //for (i = 0; i < 9; i++)
-        //{
-        //    if (i == col) continue;
-        //    if (cells[row, i].digit == 0 && cells[row, i].variant[d - 1] != 0)
-        //    {
-        //        result = true;
-        //        break;
-        //    }
-        //}
-        //if (!result) return result;
-        //result = false;
-        //for (i = 0; i < 9; i++)
-        //{
-        //    if (i == row) continue;
-        //    if (cells[i, col].digit == 0 && cells[i, col].variant[d - 1] != 0)
-        //    {
-        //        result = true;
-        //        break;
-        //    }
-        //}
-        //if (!result) return result;
-        //result = false;
-        //for(int r = row/3*3; r<=row/3*3+2; r++)
-        //    for (int c = col / 3 * 3; c <= col / 3 * 3 + 2; c++)
-        //    {
-        //        if (r == row && c == col) continue;
-        //        if (cells[r, c].digit == 0 && cells[r, c].variant[d - 1] != 0)
-        //        {
-        //            result = true;
-        //            return result;
-        //        }
-        //    }
+        for (i = 0; i < 9; i++)
+        {
+            if (i == col) continue;
+            if (Get(row, i).digit == 0 && Get(row, i).variant[d - 1] != 0)
+            {
+                result = Boolean.TRUE;
+                break;
+            }
+        }
+        if (!result) return result;
+        result = false;
+
+        for (i = 0; i < 9; i++)
+        {
+            if (i == row) continue;
+            if (Get(i, col).digit == 0 && Get(i, col).variant[d - 1] != 0)
+            {
+                result = Boolean.TRUE;
+                break;
+            }
+        }
+        if (!result) return result;
+        result = false;
+
+        for(int r = row/3*3; r<=row/3*3+2; r++)
+            for (int c = col / 3 * 3; c <= col / 3 * 3 + 2; c++)
+            {
+                if (r == row && c == col) continue;
+                if (Get(r, c).digit == 0 && Get(r, c).variant[d - 1] != 0)
+                {
+                    result = Boolean.TRUE;
+                    break;
+                }
+            }
         return result;
     }
 
-    Boolean SearchHiddenSolve() throws MyException {
+    Boolean SearchHiddenLonePerson() throws MyException {
         Boolean result = false;
-        for (int r = 0; r < 9; r++)
-            for (int c = 0; c < 9; c++)
-                if(Get(r,c).digit == 0)
-                {
-                    Cell cell = Get(r,c);
-                    for (int i = 0; i < 9; i++)
-                    {
-                        if (cell.variant[i] != 0)
-                        {
-                            if(!SearchVariant(r, c, cell.variant[i]))
-                            {
-                                System.out.println("??????? ????????: " + (r + 1) + ", " + (c + 1));
+        for (int r = 0; r < 9; r++){
+            for (int c = 0; c < 9; c++) {
+                Cell cell = Get(r,c);
+                if (cell.digit == 0) {
+                  for (int i = 0; i < 9; i++) {
+                        if (cell.variant[i] != 0) {
+                            int digit = i + 1;
+                            if (!SearchVariant(r, c, digit)) {
+                                System.out.println("Hidden lone person: " + (r + 1) + ", " + (c + 1) + ", value: " + digit);
                                 result = true;
-                                ExcludeVariant(r, c, cell.variant[i]);
-                                cell.SetDigit(cell.variant[i]);
+                                ExcludeVariant(r, c, digit);
+                                cell.SetDigit(digit);
                             }
                         }
                     }
                 }
+            }
+        }
         return result;
     }
 
@@ -258,7 +262,7 @@ public class Sudoku {
         Boolean searchSolve;
         Boolean result = Boolean.FALSE;
         do {
-            searchSolve = SearchHiddenSolve();
+            searchSolve = SearchHiddenLonePerson();
             if (searchSolve) {
                 result = Boolean.TRUE;
             }

@@ -21,8 +21,9 @@ public class Variant {
 
     public void SetVariant(int v) throws MyException
     {
+        if (v == 0) return;
         if (v > 9) { throw new MyException("Index cannot be > 9 Index cannot be > 9"); }
-        variant[v] = 1;
+        variant[v-1] = 1;
     }
     public void FillVariant()
     {
@@ -49,9 +50,11 @@ public class Variant {
     public void ExcludeVariant(int v) throws MyException
     {
         if (v == 0) return;
-        if (v >= 9) { throw new MyException("Index cannot be > 9"); }
-        if (variant[v] != 0){
-            variant[v] = 0;
+        if (v > 9) {
+            throw new MyException("Index cannot be > 9");
+        }
+        if (variant[v-1] != 0){
+            variant[v-1] = 0;
             numberVariant--;
         }
     }
