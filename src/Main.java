@@ -41,12 +41,12 @@ public class Main {
             sudoku.Solve();
             sudoku.Print();
             sudoku.PrintVariant();
-
+            //comment
         } catch (MyException e) {
             System.out.println("My exertion!");
             throw new ArithmeticException("My exertion!");
         }
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        br.readLine();
+//        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+//        br.readLine();
     }
 }

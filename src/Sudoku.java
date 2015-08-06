@@ -122,19 +122,27 @@ public class Sudoku {
             for (i = 0; i < 3; i++) {
                 for (col = 0; col < 9; col++) {
                     for (j = 0; j < 3; j++) {
-                        System.out.print(Get(row, col).variant[i * 3 + j]);
+                        if (Get(row, col).variant[i * 3 + j] == 0) {
+                            System.out.print("0");
+                        }else{
+                            System.out.print(i * 3 + j + 1);
+                        }
                     }
                     System.out.print(" ");
                     if (col % 3 == 2) System.out.print(" ");
                 }
                 System.out.println("");
+                //System.out.println("--- --- --- | --- --- --- | --- --- --- |");
             }
             System.out.println("");
-            if (row % 3 == 2) System.out.println("");
+            if (row % 3 == 2) {
+                System.out.println("");
+                //System.out.println("--- --- --- | --- --- --- | --- --- --- |");
+            }
         }
     }
 
-    Boolean DeskIsSolved() {
+    Boolean SudokuIsSolved() {
         for (int ind = 0; ind < 81; ind++)
             if (cells[ind].digit == 0) return false;
         return true;
@@ -278,11 +286,11 @@ public class Sudoku {
 
                 //1. Поиск одиночек
                 SearchSolves();
-                if (DeskIsSolved()) return;
+                if (SudokuIsSolved()) return;
 
                 //2. Скрытый одиночка
                 result = SearchHiddenSolves();
-                if (DeskIsSolved()) return;
+                if (SudokuIsSolved()) return;
                 //2.a Если был скрытый одиночка опять начинаем сначала
                 if (result) continue;
 
@@ -301,6 +309,6 @@ public class Sudoku {
             } finally {
                 //new code
             }
-        } while(! result);
+        } while(result);
     }
 }
